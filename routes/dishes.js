@@ -19,8 +19,8 @@ router.get('/', async function (req, res, next) {
 /* GET Specific dish from the dish name */
 router.get('/:dishname', async function (req, res, next) {
 	try {
-		const Dishes = await dishesService.getDish(req.params.dishname);
-		res.status(200).send({ statuscode: 200, dishes: Dishes });
+		const Dish = await dishesService.getDish(req.params.dishname);
+		res.status(200).send({ statuscode: 200, dish: Dish });
 	} catch (error) {
 		res.status(500).send({ statuscode: 500, error: error.message });
 	}
@@ -36,5 +36,17 @@ router.post('/', jsonParser, async function (req, res, next) {
 		res.status(500).send({ statuscode: 500, error: error.message });
 	}
 });
+
+/* DELETE Specific dish from the dish name */
+router.delete('/:dishname', async function (req, res, next) {
+	try {
+		await dishesService.deleteDish(req.params.dishname);
+		let dishes = await dishesService.getAllDishes();
+		res.status(200).send({ statuscode: 200, message: 'Dish deleted successfully', result: dishes});
+	} catch (error) {
+		res.status(500).send({ statuscode: 500, error: error.message });
+	}
+});
+
 
 module.exports = router;
